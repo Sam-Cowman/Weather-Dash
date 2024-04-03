@@ -1,1 +1,1 @@
-const requestUrl = `https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}`
+const APIKey = '789080c772bf84186be0d95cea3d1c7b'
