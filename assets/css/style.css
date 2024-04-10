@@ -13,18 +13,18 @@ main {
 }
 
 .custom-forecast {
-  background-color: #6059a3 !important;
+  background-color: #ffff00 !important;
   color: #333 !important;
 }
 
 .col-12 {
   text-align: center;
-  background-color: #7061c2;
+  background-color: #0080ff;
   color: #fff;
 }
 
 footer {
-  background-color: #7061c2; 
+  background-color: #0080ff; 
   color: white; 
   text-align: center;
   padding: 20px 0; 
