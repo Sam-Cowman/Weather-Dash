@@ -13,9 +13,10 @@ var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 function convertMpsToMph(mps) {
     return Math.round(mps * 2.23694); // Convert to mph and round to nearest whole number
 }
-
+// Listen for the DOMContentLoaded event, which indicates that the HTML document has been fully loaded and parsed
 document.addEventListener("DOMContentLoaded", function () {
     var searchEl = document.getElementById("search-button");
+    // Check if the search button element exists
     if (searchEl) {
         searchEl.addEventListener("click", function () {
             var city = document.getElementById("enter-city").value.trim();
@@ -59,12 +60,10 @@ function citySearch(city) {
                 // Set item in local storage
             localStorage.setItem("search", JSON.stringify(searchHistory));
             } 
-            // // Set item in local storage
-            // localStorage.setItem("weatherData", JSON.stringify(data));
+         
             // Show the weather card for today
             document.getElementById("today-weather").classList.remove("d-none");
 
-            // Render 5-day forecast
             renderFiveDayForecast(data);
         })
         .catch((error) => {
