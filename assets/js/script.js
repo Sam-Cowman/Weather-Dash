@@ -19,46 +19,58 @@ document.addEventListener("DOMContentLoaded", function () {
     if (searchEl) {
         searchEl.addEventListener("click", function () {
             var city = document.getElementById("enter-city").value.trim();
-            var apiKey = "789080c772bf84186be0d95cea3d1c7b"; // Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key
-
-            // Construct the API URL using the base URL and API key
-            var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
-
-            // Fetch data from the API
-            fetch(apiUrl)
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log("Data retrieved from API:", data);
-                    // Extract relevant information from the response for today's weather
-                    var cityName = data.city.name;
-                    var temperatureCelsius = Math.round(data.list[0].main.temp); // Round temperature to nearest whole number
-                    var temperatureFahrenheit = Math.round((temperatureCelsius * 9) / 5 + 32); // Convert Celsius to Fahrenheit and round to nearest whole number
-                    var windSpeed = data.list[0].wind.speed; // Wind speed in meters per second from API
-                    var windSpeedMph = Math.round(convertMpsToMph(windSpeed)); // Convert wind speed to mph and round to nearest whole number
-                    var weatherIconCode = data.list[0].weather[0].icon; // Weather icon code from API
-                    var humidity = data.list[0].main.humidity;
-
-                    // Update the HTML elements with the retrieved information for today's weather
-                    document.getElementById("city-name").textContent = cityName;
-                    document.getElementById("temperature").textContent = `Temperature: ${temperatureFahrenheit}°F`; // Display temperature in Fahrenheit
-                    document.getElementById("wind").textContent = `Wind Speed: ${windSpeedMph} mph`; // Display wind speed in mph
-                    document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
-                    // Set item in local storage
-                    localStorage.setItem("weatherData", JSON.stringify(data));
-                    // Show the weather card for today
-                    document.getElementById("today-weather").classList.remove("d-none");
-
-                    // Render 5-day forecast
-                    renderFiveDayForecast(data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching weather data:", error);
-                });
+            citySearch(city)
         });
     } else {
         console.error("Search button element not found.");
     }
 });
+
+function citySearch(city) {
+    var apiKey = "789080c772bf84186be0d95cea3d1c7b"; // Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key
+
+    // Construct the API URL using the base URL and API key
+    var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+
+    // Fetch data from the API
+    fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Data retrieved from API:", data);
+            // Extract relevant information from the response for today's weather
+            var cityName = data.city.name;
+            var temperatureCelsius = Math.round(data.list[0].main.temp); // Round temperature to nearest whole number
+            var temperatureFahrenheit = Math.round((temperatureCelsius * 9) / 5 + 32); // Convert Celsius to Fahrenheit and round to nearest whole number
+            var windSpeed = data.list[0].wind.speed; // Wind speed in meters per second from API
+            var windSpeedMph = Math.round(convertMpsToMph(windSpeed)); // Convert wind speed to mph and round to nearest whole number
+            var weatherIconCode = data.list[0].weather[0].icon; // Weather icon code from API
+            var iconUrl = `http://openweathermap.org/img/wn/${weatherIconCode}.png`;
+            var humidity = data.list[0].main.humidity;
+
+            // Update the HTML elements with the retrieved information for today's weather
+            document.getElementById("city-name").textContent = cityName;
+            document.getElementById("temperature").textContent = `Temperature: ${temperatureFahrenheit}°F`; // Display temperature in Fahrenheit
+            document.getElementById("wind").textContent = `Wind Speed: ${windSpeedMph} mph`; // Display wind speed in mph
+            document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
+            document.getElementById('icon').src = iconUrl
+
+            if (!searchHistory.includes(cityName)) {
+                searchHistory.push(cityName)
+                // Set item in local storage
+            localStorage.setItem("search", JSON.stringify(searchHistory));
+            } 
+            // // Set item in local storage
+            // localStorage.setItem("weatherData", JSON.stringify(data));
+            // Show the weather card for today
+            document.getElementById("today-weather").classList.remove("d-none");
+
+            // Render 5-day forecast
+            renderFiveDayForecast(data);
+        })
+        .catch((error) => {
+            console.error("Error fetching weather data:", error);
+        });
+}
 
 // Function to render the 5-day forecast
 function renderFiveDayForecast(data) {
@@ -82,7 +94,7 @@ function renderFiveDayForecast(data) {
 
         // Create elements to display the forecast data
         const forecastElement = document.createElement("div");
-        forecastElement.classList.add("col-md-2", "forecast", "bg-primary", "text-white", "m-2", "rounded");
+        forecastElement.classList.add("col-md-2", "forecast", "custom-forecast", "text-white", "m-2", "rounded");
 
         forecastElement.innerHTML = `
             <div class="date">${date.toDateString()}</div>
@@ -104,4 +116,19 @@ function renderFiveDayForecast(data) {
 // Function to convert wind speed from meters per second to miles per hour
 function convertMpsToMph(mps) {
     return mps * 2.23694; // Convert to mph
+}
+
+function listSearch() {
+    console.log(this)
+    citySearch(this.textContent)
+}
+
+if (searchHistory.length) {
+    for(let i=0; i<searchHistory.length; i++) {
+        let li = document.createElement("li")
+        li.textContent = searchHistory[i]
+        li.classList.add("list-group-item")
+        li.onclick=listSearch
+        document.getElementById("list").append(li)
+    }
 }
