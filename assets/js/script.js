@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var temperatureFahrenheit = Math.round((temperatureCelsius * 9) / 5 + 32); // Convert Celsius to Fahrenheit and round to nearest whole number
                     var windSpeed = data.list[0].wind.speed; // Wind speed in meters per second from API
                     var windSpeedMph = Math.round(convertMpsToMph(windSpeed)); // Convert wind speed to mph and round to nearest whole number
-
+                    var weatherIconCode = data.list[0].weather[0].icon; // Weather icon code from API
                     var humidity = data.list[0].main.humidity;
 
                     // Update the HTML elements with the retrieved information for today's weather
@@ -43,7 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("temperature").textContent = `Temperature: ${temperatureFahrenheit}°F`; // Display temperature in Fahrenheit
                     document.getElementById("wind").textContent = `Wind Speed: ${windSpeedMph} mph`; // Display wind speed in mph
                     document.getElementById("humidity").textContent = `Humidity: ${humidity}%`;
-
+                    // Set item in local storage
+                    localStorage.setItem("weatherData", JSON.stringify(data));
                     // Show the weather card for today
                     document.getElementById("today-weather").classList.remove("d-none");
 
