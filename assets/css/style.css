@@ -9,7 +9,7 @@ body {
 }
 
 main {
-  flex: 1; /* This makes the main content area grow to fill remaining space */
+  flex: 1; 
 }
 #today-weather {
   background-color: #00ff80;
@@ -30,8 +30,8 @@ main {
 }
 
 #icon {
-  border: 2px solid #ccc; /* Adjust border properties as needed */
-  border-radius: 5px; /* Optional: Add rounded corners to the border */
+  border: 2px solid #ccc; 
+  border-radius: 5px; 
 }
 
 footer {
